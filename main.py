@@ -7,7 +7,7 @@ white = 255, 255, 255
 
 # Constants
 G = 10
-dt = 0.5
+dt = 0.05
 softening = 0.002
 
 # TODO: research on velocity verlet, Barnes-Hut algorithm & Runge–Kutta method
@@ -88,8 +88,18 @@ def energy_calc():
     return energy
 
 
-# simulations
+def com_calc():  # center of mass
+    total_mass = 0
+    com = [0, 0]
+    for body in body_list:
+        total_mass += body.m
+        com[0] += body.m * body.px
+        com[1] += body.m * body.py
+    com[0] /= total_mass
+    com[1] /= total_mass
+    return com
 
+# simulations
 def first_sim():
     sun = Planet((450, 325), (0, -0.12), 500, 10)
     moon = Planet((60, 250), (0, 5.5), 3, 3)
@@ -141,7 +151,7 @@ if __name__ == '__main__':
     font = pygame.font.SysFont("calibri", 16)
 
     # replace with desired simulation
-    body_list = figure_eight()
+    body_list = first_sim()
 
     time_elapsed = 0
     while True:
@@ -161,11 +171,15 @@ if __name__ == '__main__':
             primary_body.draw()
 
         total_energy = energy_calc()
+        com_pos = com_calc()
         time_elapsed += dt
         text_time = font.render(f'Elapsed Time: {time_elapsed}', False, (0, 0, 0))
         text_energy = font.render(f'Total Energy (U+K): {total_energy}', False, (0, 0, 0))
+        text_com = font.render(f'Center of Mass: {com_pos}', False, (0, 0, 0))
         screen.blit(text_time, (0, 0))
         screen.blit(text_energy, (0, 15))
+        screen.blit(text_com, (0, 30))
+
         # centerX = 0
         #         # centerY = 0
         #         # for primary_body in body_list:
