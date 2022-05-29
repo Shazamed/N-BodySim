@@ -94,7 +94,7 @@ class Planet:
             self.rad = (self.rad**3 + body.rad**3)**(1/3)
             body_list.remove(body)
             global dt
-            dt -= 0.01
+            dt -= 0.006
             return True
 
 
@@ -146,12 +146,12 @@ def elliptic():
 
 
 def spam():
-    sun = Planet((width/2, height/2), (0, 0), 1250, 30, (255, 255, 0))
+    sun = Planet((width/2, height/2), (0, 0), 1500, 30, (255, 255, 0))
     # planet = Planet((200, 400), (0, 7.25), 10, 5, BLACK)
     body_l = [sun]
-    n = 80
+    n = 100
     for i in range(n):
-        orbit_radius = 350 + random.uniform(-1,1) * 250
+        orbit_radius = 400 + random.uniform(-1,1) * 325
         velocity = (G * sun.m / orbit_radius) ** 0.5
         mass = 0.5 + random.random()
         bod_radius = 4 + random.random()
