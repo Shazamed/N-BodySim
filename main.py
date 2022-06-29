@@ -26,23 +26,20 @@ def planets():
     vel[0] = np.array([0,0])
     masses[0] = 1250
     for i in range(1, n):
-        orbit_radius = 300 + random.uniform(-1, 1) * 150
-        velocity = (G * masses[0] / orbit_radius) ** 0.5
-        mass = 0.5 + random.random()
+        orbit_radius = 350 + random.uniform(-1, 1) * 250
+        velocity = 1 * (G * masses[0] / orbit_radius) ** 0.5
+
+
+        mass = 3 + random.random()
         # bod_radius = 4 + random.random()
         col = (random.random() * 255, random.random() * 255, random.random() * 255)
-        angle = math.radians(i * 360 / n)
+        angle = math.radians(i * 360 / (n-1))
         pos[i] = np.array([width / 2 + orbit_radius * math.sin(angle), height / 2 + orbit_radius * math.cos(angle)])
         vel[i] = np.array([velocity * math.cos(angle), -velocity * math.sin(angle)]).flatten()
         masses[i] = mass
         colours[i] = np.array([col])
 
-planets()
 
-screen = pygame.display.set_mode(size)
-font = pygame.font.SysFont("calibri", 16)
-
-time_elapsed = 0
 
 def kick1():
     acc = forces/masses
@@ -63,6 +60,7 @@ def kick2():
     vel += acc * dt / 2
     return
 
+
 def calc_force():
     global forces
     diff = pos.reshape(n, 1, 2) - pos
@@ -78,6 +76,7 @@ def draw():
     pygame.draw.circle(screen, (255, 255, 0), pos[0], 10)
     for i in range(1, len(pos)):
         pygame.draw.circle(screen, colours[i], pos[i], 4)
+
 
 def energy_calc():
 
@@ -97,12 +96,17 @@ def energy_calc():
     return energy
 
 
+def center_of_mass_calc():
+    com = (masses * pos / masses.sum()).sum(0)
+    return com.tolist()
 
 
+planets()
 
+screen = pygame.display.set_mode(size)
+font = pygame.font.SysFont("calibri", 16)
 
-
-
+time_elapsed = 0
 
 i = 0
 while True:
@@ -117,23 +121,17 @@ while True:
 
     draw()
     total_energy = energy_calc()
-    # com_pos = com_calc()
+    com_pos = center_of_mass_calc()
     time_elapsed += dt
     text_time = font.render(f'Elapsed Time: {time_elapsed}', False, (0, 0, 0))
     text_energy = font.render(f'Total Energy (U+K): {total_energy}', False, (0, 0, 0))
-    # text_com = font.render(f'Center of Mass: {com_pos}', False, (0, 0, 0))
-    # text_obj = font.render(f'Number of objects: {len(body_list)}', False, (0, 0, 0))
+    text_com = font.render(f'Center of Mass: {com_pos}', False, (0, 0, 0))
+    text_obj = font.render(f'Number of bodies: {masses.size}', False, (0, 0, 0))
     screen.blit(text_time, (0, 0))
     screen.blit(text_energy, (0, 15))
-    # screen.blit(text_com, (0, 30))
-    # screen.blit(text_obj, (0, 45))
+    screen.blit(text_com, (0, 30))
+    screen.blit(text_obj, (0, 45))
 
-    # centerX = 0
-    #         # centerY = 0
-    #         # for primary_body in body_list:
-    #         #     centerX += primary_body.px
-    #         #     centerY += primary_body.py
-    #         # print(centerX/4, centerY/4)
 
     pygame.display.flip()
 
