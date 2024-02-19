@@ -104,8 +104,7 @@ class system_frame:
 
     def draw(self):
         for i in range(0, len(self.body_position)):
-            pygame.draw.circle(screen, self.body_colour[i], self.body_position[i], self.body_radii[i][0])
-
+          pygame.draw.circle(screen, self.body_colour[i], self.body_position[i], self.body_radii[i][0])
 
 
 system = system_frame(*solar_system_evolution.system_param(height,width,body_number))
