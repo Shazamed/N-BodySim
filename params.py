@@ -1,0 +1,4 @@
+
+G = 1
+SOFTENING = 0.2
+DENSITY = 0.7
